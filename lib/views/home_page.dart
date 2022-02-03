@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_circular_chart/flutter_circular_chart.dart';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:graficos_api/data/api_grafico_log_report.dart';
+import 'package:graficos_api/data/api_grafico_log_test.dart';
+import 'package:graficos_api/widgets/card_grafico.dart';
+import 'package:graficos_api/widgets/card_image.dart';
+import 'package:graficos_api/widgets/card_texto.dart';
+import 'package:graficos_api/widgets/formulario_ocorrencia.dart';
+import 'package:graficos_api/widgets/tabel_log_test.dart';
+import 'package:graficos_api/widgets/tabela_log_report.dart';
 import 'package:grid_staggered_lite/grid_staggered_lite.dart';
+
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -16,240 +22,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //guarda as posições dos valores do grafico
-  var data = [0.0, 1.0, 1.5, 2.0, 0.0, -0.5, -1.0, -1.5, 0.0, 0.0];
-  var data1 = [0.0, -2.0, 3.5, -2.0, 0.5, 0.7, 0.8, 1.0, 2.0, 3.0, 3.2];
+  final _apiLogReport = ApiGraficoLogReport();
+  final _apiLogTest = ApiGraficoLogTest();
+  late List<charts.Series<dynamic, num>> seriesList = [];
+  bool? animate;
 
-  List<CircularStackEntry> circularData = <CircularStackEntry>[
-    CircularStackEntry(<CircularSegmentEntry>[
-      CircularSegmentEntry(700.0, Colors.amber, rankKey: 'Q1'),
-      CircularSegmentEntry(1000.0, Colors.lightBlue, rankKey: 'Q2'),
-      CircularSegmentEntry(1000.0, Colors.red, rankKey: 'Q3'),
-      CircularSegmentEntry(1000.0, Colors.indigo, rankKey: 'Q4'),
-    ], rankKey: 'Lucros'),
-  ];
-
-  Material _textoItens(String titulo, String subTitulo) {
-    return Material(
-      color: Colors.white,
-      elevation: 14,
-      borderRadius: BorderRadius.circular(24),
-      shadowColor: Colors.black,
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      titulo,
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      titulo,
-                      style: TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Material _circularItems(String titulo, String subTitulo) {
-    return Material(
-      color: Colors.white,
-      elevation: 14,
-      borderRadius: BorderRadius.circular(24),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      titulo,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      subTitulo,
-                      style: TextStyle(
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: AnimatedCircularChart(
-                      size: Size(100.0, 100.0),
-                      initialChartData: circularData,
-                      chartType: CircularChartType.Pie,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Material _chart1Item(String titulo, String priceVal, String subtitulo) {
-    return Material(
-      color: Colors.white,
-      elevation: 14.0,
-      borderRadius: BorderRadius.circular(24.0),
-      shadowColor: Color(0x802196F3),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      titulo,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      priceVal,
-                      style: TextStyle(
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      subtitulo,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: new Sparkline(
-                      data: data,
-                      lineColor: Color(0xffff6101),
-                      pointsMode: PointsMode.all,
-                      pointSize: 8.0,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Material _chart2Items(String title, String priceVal, String subtitle) {
-    return Material(
-      color: Colors.white,
-      elevation: 14.0,
-      borderRadius: BorderRadius.circular(24.0),
-      shadowColor: Color(0x802196F3),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      priceVal,
-                      style: TextStyle(
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: new Sparkline(
-                      data: data1,
-                      fillMode: FillMode.below,
-                      fillGradient: new LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFFFF8F00),
-                          Color(0XFFFFE082),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _apiLogReport.pegarDadosReport();
+    _apiLogTest.pegarDadosTest();
   }
 
   @override
@@ -261,12 +44,7 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.menu),
         ),
         title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(FontAwesomeIcons.chartLine),
-          ),
-        ],
+        centerTitle: true,
       ),
       body: Container(
         color: Color(0xffE5E5E5),
@@ -277,32 +55,36 @@ class _HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: EdgeInsets.all(8),
-              child: _chart1Item(
-                  "Vendas por mês", "421,3 milhões", "+12,9% da meta"),
+              child: CardGrafico(),
             ),
             Padding(
               padding: EdgeInsets.all(8),
-              child: _circularItems("Lucros trimestrais", "68,7 milhões"),
+              child: FormularioOcorrencia(),
             ),
             Padding(
               padding: EdgeInsets.only(right: 8),
-              child: _textoItens("Gerenc. de gastos", "48,6 milhões"),
+              child: CardTexto(),
             ),
             Padding(
               padding: EdgeInsets.only(right: 8),
-              child: _textoItens("Usuários", "25,5 milhões"),
+              child: CardImage(),
             ),
             Padding(
-              padding: EdgeInsets.all(8),
-              child: _chart2Items("Conversão", "0.9M", "+19% da meta"),
+              padding: EdgeInsets.only(right: 8),
+              child: TabelogReport(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: TabelaLogTest(),
             ),
           ],
           staggeredTiles: [
-            StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(2, 250.0),
-            StaggeredTile.extent(2, 120.0),
-            StaggeredTile.extent(2, 120.0),
-            StaggeredTile.extent(4, 250.0),
+            StaggeredTile.extent(4, 500.0),
+            StaggeredTile.extent(2, 350.0),
+            StaggeredTile.extent(2, 200.0),
+            StaggeredTile.extent(2, 170.0),
+            StaggeredTile.extent(2, 500),
+            StaggeredTile.extent(2, 500.0),
           ],
         ),
       ),
