@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.0"
+  charts_painter:
+    dependency: "direct main"
+    description:
+      name: charts_painter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   clock:
     dependency: transitive
     description:
@@ -116,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "9.2.0"
+  golden_toolkit:
+    dependency: transitive
+    description:
+      name: golden_toolkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   grid_staggered_lite:
     dependency: "direct main"
     description:
@@ -179,6 +193,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1+1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -198,6 +226,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  stacked_bar_chart:
+    dependency: "direct main"
+    description:
+      name: stacked_bar_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0+2"
   stream_channel:
     dependency: transitive
     description:

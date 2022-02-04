@@ -16,7 +16,7 @@ class _TabelogReportState extends State<TabelogReport> {
   final _apiLogReport = ApiGraficoLogReport();
   final _descricaoController = TextEditingController();
   final _dataController = TextEditingController();
-  final _idController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _TabelogReportState extends State<TabelogReport> {
                       width: 600,
                       height: 400,
                       child: FutureBuilder<List<Result>?>(
-                        future: _apiLogReport.pegarDadosReport(),
+                        future: ApiGraficoLogReport.pegarDadosReport(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Center(
@@ -142,9 +142,13 @@ class _TabelogReportState extends State<TabelogReport> {
                                                               context) =>
                                                           AlertDialog(
                                                         title: TextFormField(
-                                                          keyboardType: TextInputType.text,
-                                                          controller: _descricaoController,
-                                                          validator: _validarDescricao,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .text,
+                                                          controller:
+                                                              _descricaoController,
+                                                          validator:
+                                                              _validarDescricao,
                                                           decoration:
                                                               InputDecoration(
                                                             label: Text(
@@ -152,9 +156,13 @@ class _TabelogReportState extends State<TabelogReport> {
                                                           ),
                                                         ),
                                                         content: TextFormField(
-                                                          keyboardType: TextInputType.text,
-                                                          controller: _dataController,
-                                                          validator: _validarData,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .text,
+                                                          controller:
+                                                              _dataController,
+                                                          validator:
+                                                              _validarData,
                                                           decoration:
                                                               InputDecoration(
                                                             label: Text("Data"),
@@ -171,17 +179,18 @@ class _TabelogReportState extends State<TabelogReport> {
                                                           ),
                                                           TextButton(
                                                             onPressed: () {
-                                                              ApiGraficoLogReport
-                                                                  .atualizarOcorrencia(
+
+                                                              ApiGraficoLogReport.atualizarOcorrencia(
                                                                   snapshot
-                                                                      .data![index].id!.toInt(),
-                                                                      _descricaoController
-                                                                          .text,
-                                                                      _dataController
-                                                                          .text);
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  'OK');
+                                                                      .data![
+                                                                          index]
+                                                                      .id!
+                                                                      .toInt(),
+                                                                  _descricaoController
+                                                                      .text,
+                                                                  _dataController
+                                                                      .text);
+                                                              Navigator.pop(context, 'OK');
                                                             },
                                                             child: const Text(
                                                                 'Atualizar'),
@@ -222,13 +231,23 @@ class _TabelogReportState extends State<TabelogReport> {
       ),
     );
   }
+
+  void _onClickAtualizar() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    } else {
+      Navigator.pop(context, 'OK');
+    }
+  }
+
   String? _validarDescricao(String? text) {
-    if(text!.isEmpty){
+    if (text!.isEmpty) {
       return "Digite a descrição";
     }
   }
-  String? _validarData(String? text){
-    if(text!.isEmpty){
+
+  String? _validarData(String? text) {
+    if (text!.isEmpty) {
       return "Digite a data";
     }
   }

@@ -22,29 +22,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _apiLogReport = ApiGraficoLogReport();
-  final _apiLogTest = ApiGraficoLogTest();
   late List<charts.Series<dynamic, num>> seriesList = [];
   bool? animate;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _apiLogReport.pegarDadosReport();
-    _apiLogTest.pegarDadosTest();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.menu),
-        ),
         title: Text(widget.title),
         centerTitle: true,
+        elevation: 10,
+        shadowColor: Colors.black,
       ),
       body: Container(
         color: Color(0xffE5E5E5),
@@ -54,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisSpacing: 12,
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(top: 20, right: 10, left: 10),
               child: CardGrafico(),
             ),
             Padding(
@@ -79,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           staggeredTiles: [
-            StaggeredTile.extent(4, 500.0),
+            StaggeredTile.extent(4, 600.0),
             StaggeredTile.extent(2, 350.0),
             StaggeredTile.extent(2, 200.0),
             StaggeredTile.extent(2, 170.0),

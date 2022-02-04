@@ -92,13 +92,14 @@ class _FormularioOcorrenciaState extends State<FormularioOcorrencia> {
     );
   }
 
- String? _validarDescricao(String? text) {
-    if(text!.isEmpty){
+  String? _validarDescricao(String? text) {
+    if (text!.isEmpty) {
       return "Digite a descrição";
     }
   }
-  String? _validarData(String? text){
-    if(text!.isEmpty){
+
+  String? _validarData(String? text) {
+    if (text!.isEmpty) {
       return "Digite a data";
     }
   }

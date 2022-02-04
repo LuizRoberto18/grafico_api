@@ -10,7 +10,6 @@ class TabelaLogTest extends StatefulWidget {
 }
 
 class _TabelaLogTestState extends State<TabelaLogTest> {
-  final _apiLogTest = ApiGraficoLogTest();
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -43,7 +42,7 @@ class _TabelaLogTestState extends State<TabelaLogTest> {
                       width: 600,
                       height: 400,
                       child: FutureBuilder<List<ResultTest>?>(
-                        future: _apiLogTest.pegarDadosTest(),
+                        future: ApiGraficoLogTest.pegarDadosTest(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Center(

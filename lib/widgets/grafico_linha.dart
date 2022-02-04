@@ -1,48 +1,72 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:graficos_api/data/api_grafico_log_report.dart';
 import 'package:graficos_api/data/api_grafico_log_test.dart';
 import 'package:graficos_api/models/log_test.dart';
+import 'package:intl/intl.dart';
 
 class Grafico extends StatefulWidget {
-  const Grafico({required this.isShowingMainData});
-
-  final bool isShowingMainData;
-
   @override
   State<Grafico> createState() => GraficoState();
 }
 
 class GraficoState extends State<Grafico> {
-  final _apiLogReport = ApiGraficoLogReport();
-  final _apiLogTest = ApiGraficoLogTest();
+  List<ResultTest>? _listresultTest;
+  double? valor = 0;
+  double? res = 0;
+  double? valorInicial = 0;
+  List results = [];
+  List<double> posicaoServer172 = [];
+
+  loadDados() async {
+    _listresultTest = await ApiGraficoLogTest.pegarDadosTest();
+    for (int i = 0; i < 24; i++) {
+      //posicaoServer172.add(7.0);
+      posicaoServer172.add(double.parse(_listresultTest![i].average!.toStringAsFixed(1)));
+      print(posicaoServer172);
+    }
+    for (int i = 0; i < _listresultTest!.length; i++) {
+      if (valor! < _listresultTest![i].average!) {
+        valor = double.parse(_listresultTest![i].average!.toStringAsFixed(0));
+      }
+    }
+    res = valor! / 8.0;
+    for (int i = 0; i < 9; i++) {
+      results.add(valorInicial);
+      valorInicial = valorInicial! + res!;
+    }
+    _listresultTest!.where((element) => element.server == "172.40.1.43");
+    _listresultTest!.where((element) => element.server == "localhost");
+    _listresultTest!.where((element) => element.hour == "hour");
+
+    print(results);
+    print(_listresultTest![0].average);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    loadDados();
+    print("loadados ${loadDados()}");
     return LineChart(
-      widget.isShowingMainData ? sampleData1 : sampleData2,
-      swapAnimationDuration: const Duration(milliseconds: 250),
+      sampleData1,
+      swapAnimationDuration: Duration(milliseconds: 250),
     );
   }
 
   LineChartData get sampleData1 => LineChartData(
         lineTouchData: lineTouchData1,
         gridData: gridData,
+        titlesData: titlesData1,
         borderData: borderData,
+        lineBarsData: lineBarsData1,
         minX: 0,
-        maxX: 14,
-        maxY: 4,
-        minY: 0,
-      );
-
-  LineChartData get sampleData2 => LineChartData(
-        lineTouchData: lineTouchData2,
-        gridData: gridData,
-        titlesData: titlesData2,
-        borderData: borderData,
-        lineBarsData: lineBarsData2,
-        minX: 0,
-        maxX: 14,
-        maxY: 6,
+        maxX: 23,
+        maxY: 8,
         minY: 0,
       );
 
@@ -51,6 +75,37 @@ class GraficoState extends State<Grafico> {
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
         ),
+      );
+
+  FlTitlesData get titlesData1 => FlTitlesData(
+        bottomTitles: bottomTitles,
+        rightTitles: SideTitles(showTitles: false),
+        topTitles: SideTitles(showTitles: false),
+        leftTitles: leftTitles(
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 0:
+                break;
+            }
+            return '${results[value.toInt()]}';
+          },
+        ),
+      );
+
+  List<LineChartBarData> get lineBarsData1 => [
+        lineChartBarData1_2,
+        lineChartBarData1_3,
+      ];
+
+  LineChartData get sampleData2 => LineChartData(
+        lineTouchData: lineTouchData2,
+        gridData: gridData,
+        titlesData: titlesData2,
+        borderData: borderData,
+        minX: 0,
+        maxX: 14,
+        maxY: 6,
+        minY: 0,
       );
 
   LineTouchData get lineTouchData2 => LineTouchData(
@@ -65,7 +120,7 @@ class GraficoState extends State<Grafico> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return '1m';
+                return '';
               case 2:
                 return '2m';
               case 3:
@@ -80,12 +135,6 @@ class GraficoState extends State<Grafico> {
         ),
       );
 
-  List<LineChartBarData> get lineBarsData2 => [
-        lineChartBarData2_1,
-        lineChartBarData2_2,
-        lineChartBarData2_3,
-      ];
-
   SideTitles leftTitles({required GetTitleFunction getTitles}) => SideTitles(
         getTitles: getTitles,
         showTitles: true,
@@ -93,7 +142,7 @@ class GraficoState extends State<Grafico> {
         interval: 1,
         reservedSize: 40,
         getTextStyles: (context, value) => const TextStyle(
-          color: Color(0xff75729e),
+          color: Color(0xff0f00cd),
           fontWeight: FontWeight.bold,
           fontSize: 14,
         ),
@@ -105,16 +154,12 @@ class GraficoState extends State<Grafico> {
         margin: 10,
         interval: 1,
         getTextStyles: (context, value) => const TextStyle(
-          color: Color(0xff72719b),
+          color: Color(0xff040adb),
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
         getTitles: (value) {
-          try{
-           return ;
-          }catch (e){
-
-          }
+          return "$value";
         },
       );
 
@@ -123,70 +168,49 @@ class GraficoState extends State<Grafico> {
   FlBorderData get borderData => FlBorderData(
         show: true,
         border: const Border(
-          bottom: BorderSide(color: Color(0xFF07038D), width: 4),
+          bottom: BorderSide(color: Color(0xff4e4965), width: 4),
           left: BorderSide(color: Colors.transparent),
           right: BorderSide(color: Colors.transparent),
           top: BorderSide(color: Colors.transparent),
         ),
       );
 
-  //2 LINHA DO GRAFICO
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
+  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
         isCurved: true,
-        curveSmoothness: 0,
-        colors: const [Color(0xff006a33)],
-        barWidth: 4,
+        colors: [Color(0xff861be2)],
+        barWidth: 8,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 4.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
+        dotData: FlDotData(show: true),
+        belowBarData: BarAreaData(show: false, colors: [
+          Color(0x00aa4cfc),
+        ]),
+        spots: [
+          for (int i = 0; i < 24; i++) ...{
+            FlSpot(i.toDouble(), 2),
+          }
+          // FlSpot(_listresultTest![index].server!.toString()),
+          // FlSpot(results[value.toInt()]),
+          //  FlSpot(5, 2.8),
+          //  FlSpot(7, 1.2),
+          //  FlSpot(10, 2.8),
+          //  FlSpot(12, 2.6),
+          //  FlSpot(13, 3.9),
         ],
       );
 
-  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
+  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
         isCurved: true,
-        colors: const [Color(0x99aa4cfc)],
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true,
-          colors: [
-            const Color(0x33aa4cfc),
-          ],
-        ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
-
-//LINHA PRINCIPAL DO GRAFICIL
-  LineChartBarData get lineChartBarData2_3 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        colors: const [Color(0xff5a0563)],
-        barWidth: 2,
+        colors: const [Color(0xff27b6fc)],
+        barWidth: 8,
         isStrokeCapRound: true,
         dotData: FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
         spots: const [
-          FlSpot(1, 3.8),
+          FlSpot(1, 2.8),
           FlSpot(3, 1.9),
-          FlSpot(6, 5),
-          FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
+          FlSpot(6, 3),
+          FlSpot(10, 1.3),
+          FlSpot(13, 2.5),
         ],
       );
 }
@@ -258,7 +282,7 @@ class LineChartSample1State extends State<LineChartSample1> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-                    child: Grafico(isShowingMainData: isShowingMainData),
+                    child: Grafico(),
                   ),
                 ),
                 const SizedBox(

@@ -4,7 +4,7 @@ import 'package:graficos_api/models/log_test.dart';
 import 'package:http/http.dart' as http;
 
 class ApiGraficoLogTest {
-  Future<List<ResultTest>?> pegarDadosTest() async {
+  static Future<List<ResultTest>?> pegarDadosTest() async {
     var url = Uri.parse("http://172.40.1.43:10501/monitor/logTest");
 
     try {
