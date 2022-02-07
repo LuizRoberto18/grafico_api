@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
             StaggeredTile.extent(2, 350.0),
             StaggeredTile.extent(2, 200.0),
             StaggeredTile.extent(2, 170.0),
-            StaggeredTile.extent(2, 500),
+            StaggeredTile.extent(2, 530),
             StaggeredTile.extent(2, 500.0),
           ],
         ),

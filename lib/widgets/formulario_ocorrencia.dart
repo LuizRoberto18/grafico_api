@@ -12,6 +12,14 @@ class _FormularioOcorrenciaState extends State<FormularioOcorrencia> {
   final _formKey = GlobalKey<FormState>();
   final _descricaoController = TextEditingController();
   final _dataController = TextEditingController();
+  DateTime _dataTime = DateTime.now();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _dataTime;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +65,15 @@ class _FormularioOcorrenciaState extends State<FormularioOcorrencia> {
                                 labelStyle: TextStyle(color: Colors.grey),
                               ),
                             ),
-                            TextFormField(
-                              controller: _dataController,
-                              keyboardType: TextInputType.text,
-                              validator: _validarData,
-                              decoration: InputDecoration(
-                                label: Text("Data"),
-                                labelStyle: TextStyle(color: Colors.grey),
+                            ListTile(
+                              title: Text(
+                                "Data: \n",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
                               ),
+                              subtitle: Text("${_dataTime.toString()}"),
+                              onTap: _pickTime,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -101,6 +110,23 @@ class _FormularioOcorrenciaState extends State<FormularioOcorrencia> {
   String? _validarData(String? text) {
     if (text!.isEmpty) {
       return "Digite a data";
+    }
+  }
+
+  _pickTime() async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate: _dataTime,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+      cancelText: "Cancelar",
+      confirmText: "Confirmar",
+      helpText: "Data Selecionada",
+    );
+    if (d! != null) {
+      setState(() {
+        _dataTime = d;
+      });
     }
   }
 }

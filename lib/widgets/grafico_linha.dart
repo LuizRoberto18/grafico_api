@@ -9,6 +9,8 @@ class Grafico extends StatefulWidget {
   State<Grafico> createState() => GraficoState();
 }
 
+enum Servidores { localHost, sevidor2 }
+
 class GraficoState extends State<Grafico> {
   List<ResultTest>? _listresultTest;
   double? valor = 0;
@@ -16,28 +18,37 @@ class GraficoState extends State<Grafico> {
   double? valorInicial = 0;
   List results = [];
   List<double> posicaoServer172 = [];
+  List<double> listaPosicoes = [];
 
   loadDados() async {
+    //esperando dados da API
     _listresultTest = await ApiGraficoLogTest.pegarDadosTest();
+    //for para conter a quantidade de avareges dentro de 24 posições
     for (int i = 0; i < 24; i++) {
       //posicaoServer172.add(7.0);
-      posicaoServer172.add(double.parse(_listresultTest![i].average!.toStringAsFixed(1)));
+      posicaoServer172
+          .add(double.parse(_listresultTest![i].average!.toStringAsFixed(1)));
       print(posicaoServer172);
     }
+    //for para pegar a quantidade de avareges feitas na API
     for (int i = 0; i < _listresultTest!.length; i++) {
       if (valor! < _listresultTest![i].average!) {
         valor = double.parse(_listresultTest![i].average!.toStringAsFixed(0));
       }
     }
+    //pegando posições do eixoY
     res = valor! / 8.0;
     for (int i = 0; i < 9; i++) {
       results.add(valorInicial);
       valorInicial = valorInicial! + res!;
     }
-    _listresultTest!.where((element) => element.server == "172.40.1.43");
-    _listresultTest!.where((element) => element.server == "localhost");
-    _listresultTest!.where((element) => element.hour == "hour");
 
+    var _locaHost =
+        _listresultTest!.where((element) => element.server == "localhost");
+    var server2 =
+        _listresultTest!.where((element) => element.server == "172.40.1.43");
+    _listresultTest!.where((element) => element.hour == "hour");
+    listaPosicoes = _listresultTest!.map((e) => e.average!.toDouble()).toList();
     print(results);
     print(_listresultTest![0].average);
   }
@@ -46,6 +57,7 @@ class GraficoState extends State<Grafico> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    loadDados();
   }
 
   @override
@@ -65,6 +77,7 @@ class GraficoState extends State<Grafico> {
         borderData: borderData,
         lineBarsData: lineBarsData1,
         minX: 0,
+        //pegando for de valores EixoX
         maxX: 23,
         maxY: 8,
         minY: 0,
@@ -87,6 +100,7 @@ class GraficoState extends State<Grafico> {
               case 0:
                 break;
             }
+            //pegando EixoY da APi
             return '${results[value.toInt()]}';
           },
         ),
@@ -103,7 +117,7 @@ class GraficoState extends State<Grafico> {
         titlesData: titlesData2,
         borderData: borderData,
         minX: 0,
-        maxX: 14,
+        maxX: 20,
         maxY: 6,
         minY: 0,
       );
@@ -176,17 +190,19 @@ class GraficoState extends State<Grafico> {
       );
 
   LineChartBarData get lineChartBarData1_2 => LineChartBarData(
-        isCurved: true,
+        isCurved: false,
         colors: [Color(0xff861be2)],
         barWidth: 8,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: true),
+        dotData: FlDotData(
+          show: true,
+        ),
         belowBarData: BarAreaData(show: false, colors: [
           Color(0x00aa4cfc),
         ]),
         spots: [
           for (int i = 0; i < 24; i++) ...{
-            FlSpot(i.toDouble(), 2),
+            FlSpot(i.toDouble(), listaPosicoes[i]),
           }
           // FlSpot(_listresultTest![index].server!.toString()),
           // FlSpot(results[value.toInt()]),
@@ -199,7 +215,7 @@ class GraficoState extends State<Grafico> {
       );
 
   LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-        isCurved: true,
+        isCurved: false,
         colors: const [Color(0xff27b6fc)],
         barWidth: 8,
         isStrokeCapRound: true,

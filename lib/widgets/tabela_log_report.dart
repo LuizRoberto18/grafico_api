@@ -17,6 +17,14 @@ class _TabelogReportState extends State<TabelogReport> {
   final _descricaoController = TextEditingController();
   final _dataController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  DateTime _dataTime = DateTime.now();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _dataTime;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,18 +163,19 @@ class _TabelogReportState extends State<TabelogReport> {
                                                                 "Descrição"),
                                                           ),
                                                         ),
-                                                        content: TextFormField(
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .text,
-                                                          controller:
-                                                              _dataController,
-                                                          validator:
-                                                              _validarData,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            label: Text("Data"),
+                                                        content: ListTile(
+                                                          title: Text(
+                                                            "Data: \n",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .blue),
                                                           ),
+                                                          subtitle: Text(
+                                                              "${_dataTime.toString()}"),
+                                                          onTap: _pickTime,
                                                         ),
                                                         actions: <Widget>[
                                                           TextButton(
@@ -179,7 +188,6 @@ class _TabelogReportState extends State<TabelogReport> {
                                                           ),
                                                           TextButton(
                                                             onPressed: () {
-
                                                               ApiGraficoLogReport.atualizarOcorrencia(
                                                                   snapshot
                                                                       .data![
@@ -190,7 +198,9 @@ class _TabelogReportState extends State<TabelogReport> {
                                                                       .text,
                                                                   _dataController
                                                                       .text);
-                                                              Navigator.pop(context, 'OK');
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  'OK');
                                                             },
                                                             child: const Text(
                                                                 'Atualizar'),
@@ -249,6 +259,23 @@ class _TabelogReportState extends State<TabelogReport> {
   String? _validarData(String? text) {
     if (text!.isEmpty) {
       return "Digite a data";
+    }
+  }
+
+  _pickTime() async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate: _dataTime,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+      cancelText: "Cancelar",
+      confirmText: "Confirmar",
+      helpText: "Data Selecionada",
+    );
+    if (d! != null) {
+      setState(() {
+        _dataTime = d;
+      });
     }
   }
 }

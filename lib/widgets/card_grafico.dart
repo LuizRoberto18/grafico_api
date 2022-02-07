@@ -58,9 +58,18 @@ class _CardGraficoState extends State<CardGrafico> {
                 padding: EdgeInsets.all(20),
                 margin: EdgeInsets.all(10),
                 color: Colors.grey[200],
-                height: 700,
+                height: 800,
                 width: 900,
-                child: Grafico(
+                child: FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text("erro no servidor");
+                    }
+                    if (snapshot.hasData) {
+                      return Grafico();
+                    }
+                    return CircularProgressIndicator();
+                  },
                 ),
               ),
             ],

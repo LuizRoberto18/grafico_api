@@ -42,6 +42,7 @@ dependencies:
   fl_chart: ^0.41.0
   stacked_bar_chart: ^1.1.0+2
   charts_painter: ^2.0.0
+  intl:
 dev_dependencies:
   flutter_test:
     sdk: flutter
